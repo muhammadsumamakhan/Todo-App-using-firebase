@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { auth, db } from '../Config/firebase/firebaseConfig';
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, query } from "firebase/firestore";
 import { doc, deleteDoc } from "firebase/firestore";
-import { updateDoc } from "firebase/firestore";
+import { updateDoc, where } from "firebase/firestore";
 import { Timestamp } from "firebase/firestore";
 import { getDocs } from "firebase/firestore";
 import './Todo.css';
@@ -21,7 +21,7 @@ const Todo = () => {
         try {
             // Add new todo document to Firestore
             const docRef = await addDoc(collection(db, "users"), {
-                tital: todoInput.current.value, // Get todo text from input
+                title: todoInput.current.value, // Get todo text from input
                 uid: auth.currentUser.uid,      // Get the user ID
                 date: Timestamp.fromDate(new Date()), // Add current timestamp
             });
@@ -29,7 +29,7 @@ const Todo = () => {
 
             // Add new todo to the state
             todos.push({
-                tital: todoInput.current.value,
+                title: todoInput.current.value,
                 uid: auth.currentUser.uid,
                 docid: docRef.id
             });
@@ -60,9 +60,9 @@ const Todo = () => {
         try {
             const washingtonRef = doc(db, "users", item.docid);
             await updateDoc(washingtonRef, {
-                tital: updatetodo // Update todo text in Firestore
+                title: updatetodo // Update todo text in Firestore
             });
-            todos[index].tital = updatetodo; // Update state with new todo text
+            todos[index].title = updatetodo; // Update state with new todo text
             setTodos([...todos]);
         } catch (error) {
             console.log(error);
@@ -71,22 +71,20 @@ const Todo = () => {
 
     // Fetch todos from Firestore when component mounts
     useEffect(() => {
-        const getData = async () => {
-            try {
-                const querySnapshot = await getDocs(collection(db, "users"));
-                querySnapshot.forEach((doc) => {
-                    console.log(`${doc.id} => ${doc.data()}`);
-                    todos.push({
-                        ...doc.data(),
-                        docid: doc.id // Add todo document ID
-                    });
-                    setTodos([...todos]);
+        const getdbFromFirebase = async () => {
+            const q = query(collection(db, "users"), where("uid", "==", auth.currentUser.uid));
+            const querySnapshot = await getDocs(q);
+            const fetchedTodos = [];
+            querySnapshot.forEach((doc) => {
+                fetchedTodos.push({
+                    ...doc.data(),
+                    docid: doc.id
                 });
-            } catch (error) {
-                console.log(error);
-            }
-        }
-        getData();
+            });
+
+            setTodos(fetchedTodos);
+        };
+        getdbFromFirebase();
     }, []);
 
 
@@ -108,7 +106,7 @@ const Todo = () => {
                 <ol className="todo-list">
                     {todos.length > 0 ? todos.map((item, index) => (
                         <div key={index} className="todo-item">
-                            <li>{item.tital}</li>
+                            <li>{item.title}</li>
                             <div className="todo-actions">
                                 <button onClick={() => edittodo(item, index)} className="edit-button">
                                     Edit
