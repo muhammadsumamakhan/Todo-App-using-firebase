@@ -1,0 +1,75 @@
+Navbar styling
+.navbar {
+  transition: background-color 0.3s ease;
+}
+
+/* Navbar link styles */
+.navbar-light .navbar-nav .nav-link {
+  color: white;
+  transition: color 0.3s ease;
+  font-size: 1.4rem;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+  color: #d1e8ff;
+}
+
+/* Toggler button customization */
+.navbar-toggler {
+  border: none;
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3E%3Cpath stroke='white' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E");
+}
+.navbar-nav {
+  display: flex;
+  flex-direction: row; /* Center vertically */
+}
+
+.nav-item {
+  margin-left: 30px; /* Space between items */
+}
+
+.nav-link {
+  color: white; /* Link color */
+  text-decoration: none; /* Remove underline */
+  margin-left: 10px;
+}
+
+.nav-link:hover {
+  color: #ffcc00; /* Change color on hover */
+}
+
+.signout-link {
+  color: #ff4d4d; /* Different color for sign out */
+}
+
+
+/* Responsive styling */
+@media (max-width: 768px) {
+  .navbar-nav {
+      text-align: center;
+  }
+  
+  .navbar-nav .nav-item {
+      margin: 0.5rem 0;
+  }
+}
+
+/* Sign out link styling */
+.nav-link.signout-link {
+  border: 2px solid #ffffff;
+  border-radius: 15px;
+  color: white;
+  margin: 5px;
+  margin-left: 10px;
+  padding: 2px 15px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-link.signout-link:hover {
+  color: #0056b3;
+  transform: scale(1.05);
+  transition: background-color 0.3s, color 0.3s, transform 0.3s;
+}
